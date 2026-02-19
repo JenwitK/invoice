@@ -8,6 +8,9 @@ import Swal from "sweetalert2";
 export default function DashboardPage() {
     const router = useRouter();
     const [activeMenu, setActiveMenu] = useState("tax-invoice");
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
     const [formData, setFormData] = useState({
         customerName: "",
@@ -907,14 +910,112 @@ export default function DashboardPage() {
                             </table>
                         </div>
 
+
                         <div className="invoice-footer">
                             <div className="footer-left">
+                                <div className="payment-terms-box" style={{
+                                    border: '1px solid #000',
+                                    padding: '5px',
+                                    fontSize: '12px',
+                                    marginBottom: '10px'
+                                }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
+                                        <span style={{ fontWeight: 'bold', marginRight: '10px' }}>ชำระโดย<br />PAID BY</span>
+                                        <div style={{ display: 'flex', gap: '15px' }}>
+                                            <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><div style={{ width: '12px', height: '12px', border: '1px solid #000' }}></div> เงินสด <br /> CASH</label>
+                                            <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><div style={{ width: '12px', height: '12px', border: '1px solid #000' }}></div> เช็ค <br /> CHEQUE</label>
+                                            <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><div style={{ width: '12px', height: '12px', border: '1px solid #000' }}></div> เงินโอน <br /> TRANSFER</label>
+                                        </div>
+                                    </div>
+
+                                    <div style={{ display: 'flex', marginBottom: '5px' }}>
+                                        <div style={{ marginRight: '10px' }}>ธนาคาร...............สาขา...............</div>
+                                        <div>เลขที่เช็ค...............</div>
+                                    </div>
+
+                                    <div style={{ display: 'flex', marginBottom: '5px' }}>
+                                        <div style={{ marginRight: '10px' }}>ลงวันที่..../..../.......</div>
+                                        <div>จำนวนเงิน..........</div>
+                                    </div>
+
+                                    <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'end' }}>
+                                        <div>ผู้รับเงิน / COLLECTOR ........................................ วันที่ / Date......./......./.......</div>
+                                    </div>
+                                </div>
+
                                 <div className="remark-box">
                                     <strong>หมายเหตุ (Remarks):</strong>
                                     <p>ได้รับสินค้าตามรายการข้างบนถูกต้องและอยู่ในสภาพเรียบร้อย</p>
                                 </div>
                                 <div className="text-amount">
-                                    ({'ตัวอักษรบาทไทย.....'})
+                                    ( {(() => {
+                                        const amount = totals.grandTotal;
+                                        const bahtText = (num) => {
+                                            num = Number(num);
+                                            if (isNaN(num)) return "ศูนย์บาทถ้วน";
+
+                                            const THB_TEXT_NUM = ["ศูนย์", "หนึ่ง", "สอง", "สาม", "สี่", "ห้า", "หก", "เจ็ด", "แปด", "เก้า"];
+                                            const THB_TEXT_UNIT = ["", "สิบ", "ร้อย", "พัน", "หมื่น", "แสน", "ล้าน"];
+
+                                            const numStr = num.toFixed(2);
+                                            const [baht, satang] = numStr.split('.');
+
+                                            if (Number(baht) === 0 && Number(satang) === 0) return "ศูนย์บาทถ้วน";
+
+                                            let text = "";
+
+                                            // Process Baht
+                                            const bahtLen = baht.length;
+                                            for (let i = 0; i < bahtLen; i++) {
+                                                const digit = parseInt(baht[i]);
+                                                const unitIdx = (bahtLen - i - 1) % 6;
+
+                                                if (digit !== 0) {
+                                                    if (unitIdx === 1 && digit === 1 && bahtLen > 1) { // 10 (Sip)
+                                                        text += "";
+                                                    } else if (unitIdx === 1 && digit === 2) { // 20 (Yi Sip)
+                                                        text += "ยี่";
+                                                    } else if (unitIdx === 0 && digit === 1 && bahtLen > 1 && i > 0) { // 1 (Ed)
+                                                        text += "เอ็ด";
+                                                    } else {
+                                                        text += THB_TEXT_NUM[digit];
+                                                    }
+                                                    text += THB_TEXT_UNIT[unitIdx];
+                                                } else if (unitIdx === 0 && (bahtLen - i - 1) >= 6) { // Million position
+                                                    text += "ล้าน";
+                                                }
+                                            }
+
+                                            if (text.length === 0) text = "ศูนย์";
+                                            if (text) text += "บาท";
+
+                                            // Process Satang
+                                            if (Number(satang) === 0) {
+                                                return text + "ถ้วน";
+                                            } else {
+                                                const satangLen = satang.length;
+                                                for (let i = 0; i < satangLen; i++) {
+                                                    const digit = parseInt(satang[i]);
+                                                    const unitIdx = satangLen - i - 1;
+
+                                                    if (digit !== 0) {
+                                                        if (unitIdx === 1 && digit === 1) { // 10 (Sip)
+                                                            text += "";
+                                                        } else if (unitIdx === 1 && digit === 2) { // 20 (Yi Sip)
+                                                            text += "ยี่";
+                                                        } else if (unitIdx === 0 && digit === 1 && satangLen > 1) { // 1 (Ed)
+                                                            text += "เอ็ด";
+                                                        } else {
+                                                            text += THB_TEXT_NUM[digit];
+                                                        }
+                                                        text += (unitIdx === 1 ? "สิบ" : "สตางค์");
+                                                    }
+                                                }
+                                                return text;
+                                            }
+                                        };
+                                        return bahtText(amount);
+                                    })()} )
                                 </div>
                             </div>
                             <div className="footer-right">
@@ -971,22 +1072,54 @@ export default function DashboardPage() {
 
     return (
         <div className="dashboard-container">
-            <aside className="sidebar">
+            {isSidebarOpen && (
+                <div
+                    className="sidebar-overlay"
+                    onClick={() => setIsSidebarOpen(false)}
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        backgroundColor: 'rgba(0,0,0,0.5)',
+                        zIndex: 999,
+                        backdropFilter: 'blur(2px)'
+                    }}
+                />
+            )}
+
+            <aside className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
                 <div className="sidebar-header">
                     <span style={{ fontSize: '1.2rem' }}>DARA AUTO</span>
+                    <button
+                        className="close-sidebar-btn"
+                        onClick={() => setIsSidebarOpen(false)}
+                        style={{
+                            marginLeft: 'auto',
+                            background: 'none',
+                            border: 'none',
+                            color: 'white',
+                            fontSize: '1.5rem',
+                            cursor: 'pointer',
+                            display: 'none' // Hidden on desktop, shown via CSS query if needed
+                        }}
+                    >
+                        ×
+                    </button>
                 </div>
 
                 <ul className="sidebar-menu">
                     <li
                         className={`menu-item ${activeMenu === "tax-invoice" ? "active" : ""}`}
-                        onClick={() => setActiveMenu("tax-invoice")}
+                        onClick={() => { setActiveMenu("tax-invoice"); setIsSidebarOpen(false); }}
                     >
                         <span className="menu-icon">📄</span>
                         ออกใบกำกับภาษี
                     </li>
                     <li
                         className={`menu-item ${activeMenu === "quotation" ? "active" : ""}`}
-                        onClick={() => setActiveMenu("quotation")}
+                        onClick={() => { setActiveMenu("quotation"); setIsSidebarOpen(false); }}
                     >
                         <span className="menu-icon">📑</span>
                         ออกใบเสนอราคา
@@ -994,21 +1127,21 @@ export default function DashboardPage() {
 
                     <li
                         className={`menu-item ${activeMenu === "customers" ? "active" : ""}`}
-                        onClick={() => setActiveMenu("customers")}
+                        onClick={() => { setActiveMenu("customers"); setIsSidebarOpen(false); }}
                     >
                         <span className="menu-icon">👥</span>
                         ฐานข้อมูลลูกค้า
                     </li>
                     <li
                         className={`menu-item ${activeMenu === "history" ? "active" : ""}`}
-                        onClick={() => setActiveMenu("history")}
+                        onClick={() => { setActiveMenu("history"); setIsSidebarOpen(false); }}
                     >
                         <span className="menu-icon">📜</span>
                         ประวัติเอกสาร
                     </li>
                     <li
                         className={`menu-item ${activeMenu === "products" ? "active" : ""}`}
-                        onClick={() => setActiveMenu("products")}
+                        onClick={() => { setActiveMenu("products"); setIsSidebarOpen(false); }}
                     >
                         <span className="menu-icon">📦</span>
                         ฐานข้อมูลสินค้า
@@ -1026,33 +1159,50 @@ export default function DashboardPage() {
             <main className="main-content">
                 <div key={activeMenu} className="animate-fade-in">
                     <header className="main-header">
-                        <div className="page-title">
-                            {activeMenu === "quotation" ? (
-                                <>
-                                    <span className="page-icon quotation">📑</span>
-                                    ออกใบเสนอราคา (Quotation)
-                                </>
-                            ) : activeMenu === "customers" ? (
-                                <>
-                                    <span className="page-icon customers">👥</span>
-                                    ฐานข้อมูลลูกค้า
-                                </>
-                            ) : activeMenu === "history" ? (
-                                <>
-                                    <span className="page-icon history">📜</span>
-                                    ประวัติเอกสาร (History)
-                                </>
-                            ) : activeMenu === "products" ? (
-                                <>
-                                    <span className="page-icon products">📦</span>
-                                    ฐานข้อมูลสินค้า
-                                </>
-                            ) : (
-                                <>
-                                    <span className="page-icon invoice">📄</span>
-                                    ออกใบกำกับภาษี (Tax Invoice)
-                                </>
-                            )}
+                        <div className="header-left" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                            <button
+                                className="menu-toggle-btn"
+                                onClick={toggleSidebar}
+                                style={{
+                                    display: 'none', // Controlled by CSS media query
+                                    background: 'white',
+                                    border: '1px solid #e2e8f0',
+                                    borderRadius: '8px',
+                                    padding: '8px',
+                                    cursor: 'pointer',
+                                    color: '#64748b'
+                                }}
+                            >
+                                ☰
+                            </button>
+                            <div className="page-title">
+                                {activeMenu === "quotation" ? (
+                                    <>
+                                        <span className="page-icon quotation">📑</span>
+                                        ออกใบเสนอราคา (Quotation)
+                                    </>
+                                ) : activeMenu === "customers" ? (
+                                    <>
+                                        <span className="page-icon customers">👥</span>
+                                        ฐานข้อมูลลูกค้า
+                                    </>
+                                ) : activeMenu === "history" ? (
+                                    <>
+                                        <span className="page-icon history">📜</span>
+                                        ประวัติเอกสาร (History)
+                                    </>
+                                ) : activeMenu === "products" ? (
+                                    <>
+                                        <span className="page-icon products">📦</span>
+                                        ฐานข้อมูลสินค้า
+                                    </>
+                                ) : (
+                                    <>
+                                        <span className="page-icon invoice">📄</span>
+                                        ออกใบกำกับภาษี (Tax Invoice)
+                                    </>
+                                )}
+                            </div>
                         </div>
                         <div className="header-actions">
                             {activeMenu === "customers" ? (

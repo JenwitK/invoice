@@ -474,20 +474,7 @@ body {
     }
 }
 
-@media (max-width: 768px) {
-    .dashboard-container {
-        flex-direction: column;
-    }
-
-    .sidebar {
-        width: 100%;
-        padding: 16px;
-    }
-
-    .main-content {
-        padding: 20px;
-    }
-}
+/* Old media query removed */
 
 .swal2-popup {
     font-family: 'Sarabun', sans-serif !important;
@@ -1107,5 +1094,210 @@ body {
 
     .swal2-container {
         display: none !important;
+    }
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+
+    /* Sidebar Mobile */
+    .sidebar {
+        position: fixed;
+        left: -280px;
+        top: 0;
+        bottom: 0;
+        width: 280px;
+        /* Force fixed width */
+        z-index: 1000;
+        transition: left 0.3s ease;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+    }
+
+    .sidebar.open {
+        left: 0;
+    }
+
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(2px);
+        z-index: 999;
+        animation: fadeIn 0.3s ease;
+    }
+
+    /* Header Mobile */
+    .main-header {
+        position: sticky;
+        top: 0;
+        z-index: 900;
+        padding: 12px 16px;
+    }
+
+    .menu-toggle-btn {
+        display: flex !important;
+        /* Force display on mobile */
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 8px;
+        margin-right: 12px;
+        cursor: pointer;
+        color: #64748b;
+        transition: all 0.2s;
+    }
+
+    .menu-toggle-btn:active {
+        background: #f1f5f9;
+        transform: scale(0.95);
+    }
+
+    .header-left {
+        display: flex;
+        align-items: center;
+    }
+
+    .page-title {
+        font-size: 1.25rem;
+    }
+
+    /* Content Mobile */
+    .main-content {
+        padding: 16px;
+        margin-left: 0;
+    }
+
+    .content-card {
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .card-actions {
+        width: 100%;
+        display: flex;
+        gap: 8px;
+    }
+
+    .card-actions button {
+        flex: 1;
+        justify-content: center;
+    }
+
+    /* Form Mobile */
+    .form-section {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .form-group {
+        margin-bottom: 16px;
+    }
+
+    .form-group label {
+        font-size: 0.9rem;
+    }
+
+    .form-control {
+        font-size: 1rem;
+        padding: 10px 12px;
+    }
+
+    /* Table Mobile (Horizontal Scroll) */
+    .table-container,
+    .invoice-table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .customers-table {
+        min-width: 800px;
+        /* Ensure table doesn't squash */
+    }
+
+    /* Hide less important columns on VERY small screens if needed, 
+       but scrolling is usually better for data tables */
+
+    /* Stats Grid Mobile */
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .totals-box {
+        padding: 16px;
+        background: #f8fafc;
+        border-radius: 12px;
+    }
+
+    /* Preview Mobile */
+    .preview-toolbar {
+        flex-direction: column;
+        gap: 16px;
+        align-items: stretch;
+    }
+
+    .preview-title {
+        justify-content: center;
+    }
+
+    .preview-actions {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        width: 100%;
+    }
+
+    .a4-paper {
+        width: 210mm !important;
+        /* Force true A4 width */
+        min-width: 210mm;
+        transform: scale(0.45);
+        /* Scale down for mobile */
+        transform-origin: top left;
+        margin-left: 50% !important;
+        translate: -50% 0;
+        /* Center using translate */
+        padding: 20px;
+        margin-bottom: -140mm;
+        /* Compensate for empty space after scale */
+    }
+
+    .preview-content {
+        overflow-x: hidden;
+        /* Hide horizontal scroll since we scale */
+        display: block;
+    }
+
+    .invoice-header h2 {
+        font-size: 16px;
+    }
+
+    .doc-title-box h3 {
+        font-size: 18px;
+    }
+
+    .invoice-info-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .invoice-footer-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
     }
 }
