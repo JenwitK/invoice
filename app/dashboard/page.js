@@ -1091,30 +1091,36 @@ export default function DashboardPage() {
                                     })()} )
                                 </div>
                             </div>
-                            <div className="footer-right">
-                                <div className="total-row">
-                                    <span>รวมเงิน</span>
-                                    <span>{totals.subtotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                            <div className="d-flex mt-4">
+                                <div className="flex-1 pr-3">
+                                    <div className="totals-section">
+                                        <div className="totals-row">
+                                            <span>รวมเงิน</span>
+                                            <span>{totals.subtotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                                        </div>
+                                        <div className="totals-row">
+                                            <span>ส่วนลด</span>
+                                            <span>0.00</span>
+                                        </div>
+                                        <div className="totals-row">
+                                            <span>หัก ณ ที่จ่าย</span>
+                                            <span>0.00</span>
+                                        </div>
+                                        <div className="d-flex justify-between mb-2">
+                                            <span>มูลค่าสินค้าหลังหักส่วนลด</span>
+                                            <span>{totals.subtotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                                        </div>
+                                        <div className="totals-row">
+                                            <span>ภาษีมูลค่าเพิ่ม 7%</span>
+                                            <span>{totals.vat.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                                        </div>
+                                        <div className="d-flex justify-between totals-divider-custom">
+                                            <span>จํานวนเงินทั้งสิ้น</span>
+                                            <span>{totals.grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div className="total-row">
-                                    <span>ส่วนลด</span>
-                                    <span>0.00</span>
-                                </div>
-                                <div className="total-row">
-                                    <span>หัก ณ ที่จ่าย</span>
-                                    <span>0.00</span>
-                                </div>
-                                <div className="total-row">
-                                    <span>มูลค่าสินค้าหลังหักส่วนลด</span>
-                                    <span>{totals.subtotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
-                                </div>
-                                <div className="total-row">
-                                    <span>ภาษีมูลค่าเพิ่ม 7%</span>
-                                    <span>{totals.vat.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
-                                </div>
-                                <div className="grand-total-row">
-                                    <span>จํานวนเงินทั้งสิ้น</span>
-                                    <span>{totals.grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                                <div className="flex-1 pl-3">
                                 </div>
                             </div>
                         </div>
@@ -1594,14 +1600,14 @@ export default function DashboardPage() {
 
 
                         {activeMenu !== "customers" && activeMenu !== "products" && activeMenu !== "history" && (
-                            <div className="invoice-items-section" style={{ marginTop: '24px' }}>
-                                <div className="d-flex justify-content-between align-items-center mb-3">
-                                    <h3 className="section-title" style={{ fontSize: '1.1rem', fontWeight: 600 }}>รายการสินค้า (Items)</h3>
+                            <div className="invoice-items-section mt-4">
+                                <div className="d-flex justify-between align-center mb-3">
+                                    <h3 className="section-title text-lg font-bold">รายการสินค้า (Items)</h3>
                                     <div className="d-flex gap-2">
-                                        <button className="action-btn" onClick={handleImportProduct} style={{ backgroundColor: '#e0e7ff', color: '#3730a3', border: '1px solid #c7d2fe' }}>
+                                        <button className="action-btn action-btn-import" onClick={handleImportProduct}>
                                             📦 เลือกจากฐานข้อมูล
                                         </button>
-                                        <button className="action-btn" onClick={handleAddInvoiceItem} style={{ backgroundColor: '#f0f9ff', color: '#0369a1', border: '1px solid #bae6fd' }}>
+                                        <button className="action-btn action-btn-add" onClick={handleAddInvoiceItem}>
                                             + เพิ่มรายการ
                                         </button>
                                     </div>
