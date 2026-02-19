@@ -19,7 +19,7 @@ export default function DashboardPage() {
         address: "",
         docDate: "",
         dueDate: "",
-        salesperson: "Admin",
+        salesperson: "",
         docNumber: ""
     });
 
@@ -34,7 +34,7 @@ export default function DashboardPage() {
             address: "",
             docDate: "",
             dueDate: "",
-            salesperson: "Admin",
+            salesperson: "",
             docNumber: ""
         });
     } else if (activeMenu === "quotation" && mode !== "quotation") {
@@ -46,7 +46,7 @@ export default function DashboardPage() {
             address: "",
             docDate: "",
             dueDate: "",
-            salesperson: "Admin",
+            salesperson: "",
             docNumber: ""
         });
     }
@@ -67,6 +67,15 @@ export default function DashboardPage() {
 
     const [previewMode, setPreviewMode] = useState(false);
     const [autoPrint, setAutoPrint] = useState(false);
+
+    const [companyInfo, setCompanyInfo] = useState({
+        name: "ห้างหุ้นส่วนจำกัด ดารา ออโต้คาร์",
+        address: "216 หมู่ที่ 3 ตำบลปะโค อำเภอกุมภวาปี จังหวัดอุดรธานี 41370 (สำนักงานใหญ่)",
+        tel: "089-7116167, 081-5458877 (Auto)",
+        fax: "042-398163",
+        taxId: "0413555000531",
+        logoText: "DARA AUTO"
+    });
 
     useEffect(() => {
         setLoadingCustomers(true);
@@ -168,7 +177,7 @@ export default function DashboardPage() {
 
     const handleAddProduct = async () => {
         const { value: formValues } = await Swal.fire({
-            title: '<h3 style="font-size:1.5rem; color:#1e293b; margin-bottom:0.5rem">เพิ่มสินค้าใหม่</h3>',
+            title: '<h3 class="swal-title-custom">เพิ่มสินค้าใหม่</h3>',
             html:
                 `
                 <div class="swal-grid">
@@ -181,7 +190,7 @@ export default function DashboardPage() {
                         <input id="swal-prod-unit" class="swal-custom-input" placeholder="เช่น ชิ้น, อัน">
                     </div>
                     <div class="swal-form-group swal-full-width">
-                        <label class="swal-label">📝 ชื่อสินค้า <span style="color:#ef4444">*</span></label>
+                        <label class="swal-label">📝 ชื่อสินค้า <span class="text-red-500">*</span></label>
                         <input id="swal-prod-name" class="swal-custom-input" placeholder="ระบุชื่อสินค้า">
                     </div>
                     <div class="swal-form-group">
@@ -240,9 +249,66 @@ export default function DashboardPage() {
         }
     };
 
+    const handleEditCompanyInfo = async () => {
+        const { value: formValues } = await Swal.fire({
+            title: '<h3 class="swal-title-custom">แก้ไขข้อมูลร้านค้า</h3>',
+            html:
+                `
+                <div class="swal-grid">
+                    <div class="swal-form-group swal-full-width">
+                        <label class="swal-label">ชื่อโลโก้ / ชื่อย่อ (Sidebar)</label>
+                        <input id="swal-comp-logotext" class="swal-custom-input" value="${companyInfo.logoText || ''}">
+                    </div>
+                    <div class="swal-form-group swal-full-width">
+                        <label class="swal-label">ชื่อร้านค้า / บริษัท</label>
+                        <input id="swal-comp-name" class="swal-custom-input" value="${companyInfo.name}">
+                    </div>
+                    <div class="swal-form-group swal-full-width">
+                        <label class="swal-label">ที่อยู่</label>
+                        <input id="swal-comp-address" class="swal-custom-input" value="${companyInfo.address}">
+                    </div>
+                    <div class="swal-form-group">
+                        <label class="swal-label">เบอร์โทรศัพท์</label>
+                        <input id="swal-comp-tel" class="swal-custom-input" value="${companyInfo.tel}">
+                    </div>
+                    <div class="swal-form-group">
+                        <label class="swal-label">Fax</label>
+                        <input id="swal-comp-fax" class="swal-custom-input" value="${companyInfo.fax}">
+                    </div>
+                    <div class="swal-form-group swal-full-width">
+                        <label class="swal-label">เลขประจำตัวผู้เสียภาษี</label>
+                        <input id="swal-comp-taxid" class="swal-custom-input" value="${companyInfo.taxId}">
+                    </div>
+                </div>
+                `,
+            width: '600px',
+            focusConfirm: false,
+            showCancelButton: true,
+            confirmButtonText: 'บันทึก',
+            cancelButtonText: 'ยกเลิก',
+            confirmButtonColor: '#4f46e5',
+            cancelButtonColor: '#94a3b8',
+            preConfirm: () => {
+                return {
+                    name: document.getElementById('swal-comp-name').value,
+                    address: document.getElementById('swal-comp-address').value,
+                    tel: document.getElementById('swal-comp-tel').value,
+                    fax: document.getElementById('swal-comp-fax').value,
+                    taxId: document.getElementById('swal-comp-taxid').value,
+                    logoText: document.getElementById('swal-comp-logotext').value
+                }
+            }
+        });
+
+        if (formValues) {
+            setCompanyInfo(formValues);
+            Swal.fire('สำเร็จ', 'บันทึกข้อมูลเรียบร้อยแล้ว', 'success');
+        }
+    };
+
     const handleEditProduct = async (product) => {
         const { value: formValues } = await Swal.fire({
-            title: '<h3 style="font-size:1.5rem; color:#1e293b; margin-bottom:0.5rem">แก้ไขสินค้า</h3>',
+            title: '<h3 class="swal-title-custom">แก้ไขสินค้า</h3>',
             html:
                 `
                 <div class="swal-grid">
@@ -255,7 +321,7 @@ export default function DashboardPage() {
                         <input id="swal-prod-unit" class="swal-custom-input" value="${product.product_unit || ''}" placeholder="เช่น ชิ้น">
                     </div>
                     <div class="swal-form-group swal-full-width">
-                        <label class="swal-label">📝 ชื่อสินค้า <span style="color:#ef4444">*</span></label>
+                        <label class="swal-label">📝 ชื่อสินค้า <span class="text-red-500">*</span></label>
                         <input id="swal-prod-name" class="swal-custom-input" value="${product.product_name}" placeholder="ระบุชื่อสินค้า">
                     </div>
                     <div class="swal-form-group">
@@ -455,12 +521,12 @@ export default function DashboardPage() {
     const handleAddCustomer = async () => {
 
         const { value: formValues } = await Swal.fire({
-            title: '<h3 style="font-size:1.5rem; color:#1e293b; margin-bottom:0.5rem">เพิ่มลูกค้าใหม่</h3>',
+            title: '<h3 class="swal-title-custom">เพิ่มลูกค้าใหม่</h3>',
             html:
                 `
                 <div class="swal-grid">
                     <div class="swal-form-group swal-full-width">
-                        <label class="swal-label">👤 ชื่อลูกค้า <span style="color:#ef4444">*</span></label>
+                        <label class="swal-label">👤 ชื่อลูกค้า <span class="text-red-500">*</span></label>
                         <input id="swal-input1" class="swal-custom-input" placeholder="ระบุชื่อลูกค้าบริษัท / บุคคลธรรมดา">
                     </div>
                     <div class="swal-form-group swal-full-width">
@@ -539,7 +605,7 @@ export default function DashboardPage() {
             html:
                 `
                 <div class="swal-form-group">
-                    <label class="swal-label">ชื่อลูกค้า <span style="color:red">*</span></label>
+                    <label class="swal-label">ชื่อลูกค้า <span class="text-red-500">*</span></label>
                     <input id="swal-input1" class="swal2-input" placeholder="ระบุชื่อลูกค้า" value="${customer.customer_name}">
                 </div>
                 <div class="swal-form-group">
@@ -807,13 +873,23 @@ export default function DashboardPage() {
                     <div className="a4-paper">
                         <div className="invoice-header">
                             <div className="company-logo">
-                                <div className="logo-placeholder">DARA AUTO</div>
+                                <div className="logo-placeholder">{companyInfo.logoText || 'DARA AUTO'}</div>
                             </div>
-                            <div className="company-info">
-                                <h2>ห้างหุ้นส่วนจำกัด ดารา ออโต้คาร์</h2>
-                                <p>216 หมู่ที่ 3 ตำบลปะโค อำเภอกุมภวาปี จังหวัดอุดรธานี 41370 (สำนักงานใหญ่)</p>
-                                <p>โทร: 089-7116167, 081-5458877 (Auto) Fax: 042-398163</p>
-                                <p>เลขประจำตัวผู้เสียภาษี Tax ID: 0413555000531</p>
+                            <div className="company-info company-info-container">
+                                <div className="d-flex align-center gap-2">
+                                    <h2>{companyInfo.name}</h2>
+                                    {!autoPrint && (
+                                        <button
+                                            onClick={handleEditCompanyInfo}
+                                            className="company-edit-btn no-print"
+                                        >
+                                            ✏️
+                                        </button>
+                                    )}
+                                </div>
+                                <p>{companyInfo.address}</p>
+                                <p>โทร: {companyInfo.tel} Fax: {companyInfo.fax}</p>
+                                <p>เลขประจำตัวผู้เสียภาษี Tax ID: {companyInfo.taxId}</p>
                             </div>
                             <div className="doc-title-box">
                                 <h3>{activeMenu === 'quotation' ? 'ใบเสนอราคา' : 'ใบกำกับภาษี/ใบเสร็จรับเงิน'}</h3>
@@ -861,7 +937,7 @@ export default function DashboardPage() {
                                         </tr>
                                         <tr>
                                             <td className="label">พนักงานขาย:</td>
-                                            <td>{formData.salesperson}</td>
+                                            <td>{formData.salesperson || '-'}</td>
                                         </tr>
                                         <tr>
                                             <td className="label">เอกสารอ้างอิง:</td>
@@ -880,25 +956,25 @@ export default function DashboardPage() {
                             <table className="invoice-table">
                                 <thead>
                                     <tr>
-                                        <th style={{ width: '5%', textAlign: 'center' }}>ลำดับ</th>
-                                        <th style={{ width: '15%' }}>รหัสสินค้า<br /><span className="sub-th">Code</span></th>
-                                        <th style={{ width: '40%' }}>รายการสินค้า<br /><span className="sub-th">Description</span></th>
-                                        <th style={{ width: '10%', textAlign: 'center' }}>หน่วย<br /><span className="sub-th">Unit</span></th>
-                                        <th style={{ width: '10%', textAlign: 'right' }}>จำนวน<br /><span className="sub-th">Qty</span></th>
-                                        <th style={{ width: '10%', textAlign: 'right' }}>ราคาขาย<br /><span className="sub-th">Price</span></th>
-                                        <th style={{ width: '10%', textAlign: 'right' }}>จำนวนเงิน<br /><span className="sub-th">Amount</span></th>
+                                        <th className="w-5 text-center">ลำดับ</th>
+                                        <th className="w-15">รหัสสินค้า<br /><span className="sub-th">Code</span></th>
+                                        <th className="w-40">รายการสินค้า<br /><span className="sub-th">Description</span></th>
+                                        <th className="w-10 text-center">หน่วย<br /><span className="sub-th">Unit</span></th>
+                                        <th className="w-10 text-right">จำนวน<br /><span className="sub-th">Qty</span></th>
+                                        <th className="w-10 text-right">ราคาขาย<br /><span className="sub-th">Price</span></th>
+                                        <th className="w-10 text-right">จำนวนเงิน<br /><span className="sub-th">Amount</span></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {invoiceItems.map((item, index) => (
                                         <tr key={index}>
-                                            <td style={{ textAlign: 'center' }}>{index + 1}</td>
+                                            <td className="text-center">{index + 1}</td>
                                             <td>{item.productId || '-'}</td>
                                             <td>{item.name}</td>
-                                            <td style={{ textAlign: 'center' }}>{item.unit}</td>
-                                            <td style={{ textAlign: 'right' }}>{item.quantity}</td>
-                                            <td style={{ textAlign: 'right' }}>{Number(item.price).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
-                                            <td style={{ textAlign: 'right' }}>{Number(item.total).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                            <td className="text-center">{item.unit}</td>
+                                            <td className="text-right">{item.quantity}</td>
+                                            <td className="text-right">{Number(item.price).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
+                                            <td className="text-right">{Number(item.total).toLocaleString(undefined, { minimumFractionDigits: 2 })}</td>
                                         </tr>
                                     ))}
                                     {[...Array(Math.max(0, 10 - invoiceItems.length))].map((_, i) => (
@@ -913,32 +989,27 @@ export default function DashboardPage() {
 
                         <div className="invoice-footer">
                             <div className="footer-left">
-                                <div className="payment-terms-box" style={{
-                                    border: '1px solid #000',
-                                    padding: '5px',
-                                    fontSize: '12px',
-                                    marginBottom: '10px'
-                                }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
-                                        <span style={{ fontWeight: 'bold', marginRight: '10px' }}>ชำระโดย<br />PAID BY</span>
-                                        <div style={{ display: 'flex', gap: '15px' }}>
-                                            <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><div style={{ width: '12px', height: '12px', border: '1px solid #000' }}></div> เงินสด <br /> CASH</label>
-                                            <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><div style={{ width: '12px', height: '12px', border: '1px solid #000' }}></div> เช็ค <br /> CHEQUE</label>
-                                            <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}><div style={{ width: '12px', height: '12px', border: '1px solid #000' }}></div> เงินโอน <br /> TRANSFER</label>
+                                <div className="payment-terms-box">
+                                    <div className="d-flex align-center mb-2">
+                                        <span className="font-bold mr-2">ชำระโดย<br />PAID BY</span>
+                                        <div className="d-flex gap-3">
+                                            <label className="d-flex align-center gap-2"><div className="check-box"></div> เงินสด <br /> CASH</label>
+                                            <label className="d-flex align-center gap-2"><div className="check-box"></div> เช็ค <br /> CHEQUE</label>
+                                            <label className="d-flex align-center gap-2"><div className="check-box"></div> เงินโอน <br /> TRANSFER</label>
                                         </div>
                                     </div>
 
-                                    <div style={{ display: 'flex', marginBottom: '5px' }}>
-                                        <div style={{ marginRight: '10px' }}>ธนาคาร...............สาขา...............</div>
+                                    <div className="d-flex mb-2">
+                                        <div className="mr-3">ธนาคาร...............สาขา...............</div>
                                         <div>เลขที่เช็ค...............</div>
                                     </div>
 
-                                    <div style={{ display: 'flex', marginBottom: '5px' }}>
-                                        <div style={{ marginRight: '10px' }}>ลงวันที่..../..../.......</div>
+                                    <div className="d-flex mb-2">
+                                        <div className="mr-3">ลงวันที่..../..../.......</div>
                                         <div>จำนวนเงิน..........</div>
                                     </div>
 
-                                    <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'end' }}>
+                                    <div className="mt-3 d-flex justify-between align-end">
                                         <div>ผู้รับเงิน / COLLECTOR ........................................ วันที่ / Date......./......./.......</div>
                                     </div>
                                 </div>
@@ -981,7 +1052,9 @@ export default function DashboardPage() {
                                                         text += THB_TEXT_NUM[digit];
                                                     }
                                                     text += THB_TEXT_UNIT[unitIdx];
-                                                } else if (unitIdx === 0 && (bahtLen - i - 1) >= 6) { // Million position
+                                                }
+
+                                                if (unitIdx === 0 && (bahtLen - i - 1) >= 6) { // Million position
                                                     text += "ล้าน";
                                                 }
                                             }
@@ -1074,36 +1147,17 @@ export default function DashboardPage() {
         <div className="dashboard-container">
             {isSidebarOpen && (
                 <div
-                    className="sidebar-overlay"
+                    className="sidebar-overlay sidebar-overlay-custom"
                     onClick={() => setIsSidebarOpen(false)}
-                    style={{
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        backgroundColor: 'rgba(0,0,0,0.5)',
-                        zIndex: 999,
-                        backdropFilter: 'blur(2px)'
-                    }}
                 />
             )}
 
             <aside className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
                 <div className="sidebar-header">
-                    <span style={{ fontSize: '1.2rem' }}>DARA AUTO</span>
+                    <span className="text-lg">{companyInfo.logoText || 'DARA AUTO'}</span>
                     <button
-                        className="close-sidebar-btn"
+                        className="close-sidebar-btn close-sidebar-btn-custom"
                         onClick={() => setIsSidebarOpen(false)}
-                        style={{
-                            marginLeft: 'auto',
-                            background: 'none',
-                            border: 'none',
-                            color: 'white',
-                            fontSize: '1.5rem',
-                            cursor: 'pointer',
-                            display: 'none' // Hidden on desktop, shown via CSS query if needed
-                        }}
                     >
                         ×
                     </button>
@@ -1149,29 +1203,28 @@ export default function DashboardPage() {
                 </ul>
 
                 <div className="sidebar-footer">
+                    <button
+                        onClick={() => { handleEditCompanyInfo(); setIsSidebarOpen(false); }}
+                        className="logout-btn"
+                        style={{ marginBottom: '10px', background: 'rgba(255, 255, 255, 0.05)', borderColor: 'rgba(255, 255, 255, 0.1)' }}
+                    >
+                        <span className="menu-icon">⚙️</span>
+                        ข้อมูลร้านค้า
+                    </button>
                     <button onClick={handleLogout} className="logout-btn">
                         <span className="menu-icon">↩️</span>
                         ออกจากระบบ
                     </button>
                 </div>
-            </aside>
+            </aside >
 
             <main className="main-content">
                 <div key={activeMenu} className="animate-fade-in">
                     <header className="main-header">
-                        <div className="header-left" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <div className="header-left d-flex align-center gap-3">
                             <button
-                                className="menu-toggle-btn"
+                                className="menu-toggle-btn menu-toggle-btn-custom"
                                 onClick={toggleSidebar}
-                                style={{
-                                    display: 'none', // Controlled by CSS media query
-                                    background: 'white',
-                                    border: '1px solid #e2e8f0',
-                                    borderRadius: '8px',
-                                    padding: '8px',
-                                    cursor: 'pointer',
-                                    color: '#64748b'
-                                }}
                             >
                                 ☰
                             </button>
@@ -1496,10 +1549,9 @@ export default function DashboardPage() {
                                             <div className="doc-number-group">
                                                 <input
                                                     type="text"
-                                                    className="form-control readonly"
+                                                    className={`form-control readonly font-bold ${activeMenu === 'quotation' ? 'text-amber-600' : 'text-blue-600'}`}
                                                     value={formData.docNumber}
                                                     readOnly
-                                                    style={{ color: activeMenu === 'quotation' ? '#d97706' : '#2563eb', fontWeight: 'bold' }}
                                                 />
                                                 <button className="refresh-btn" onClick={handleGenerateDocNumber}>🔄</button>
                                             </div>
@@ -1531,7 +1583,8 @@ export default function DashboardPage() {
                                                 type="text"
                                                 className="form-control"
                                                 value={formData.salesperson}
-                                                readOnly
+                                                onChange={(e) => setFormData({ ...formData, salesperson: e.target.value })}
+                                                placeholder="ระบุชื่อพนักงานขาย"
                                             />
                                         </div>
                                     </div>
@@ -1558,19 +1611,19 @@ export default function DashboardPage() {
                                     <table className="customers-table width-100">
                                         <thead>
                                             <tr>
-                                                <th style={{ width: '5%' }}>#</th>
-                                                <th style={{ width: '35%' }}>รายการสินค้า</th>
-                                                <th style={{ width: '10%' }}>จำนวน</th>
-                                                <th style={{ width: '10%' }}>หน่วย</th>
-                                                <th style={{ width: '15%' }}>ราคา/หน่วย</th>
-                                                <th style={{ width: '15%' }}>รวมเงิน</th>
-                                                <th style={{ width: '10%', textAlign: 'center' }}>ลบ</th>
+                                                <th className="w-5">#</th>
+                                                <th className="w-35">รายการสินค้า</th>
+                                                <th className="w-10">จำนวน</th>
+                                                <th className="w-10">หน่วย</th>
+                                                <th className="w-15">ราคา/หน่วย</th>
+                                                <th className="w-15">รวมเงิน</th>
+                                                <th className="w-10 text-center">ลบ</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {invoiceItems.map((item, index) => (
                                                 <tr key={item.id}>
-                                                    <td style={{ textAlign: 'center' }}>{index + 1}</td>
+                                                    <td className="text-center">{index + 1}</td>
                                                     <td>
                                                         <input
                                                             className="form-control"
@@ -1605,10 +1658,10 @@ export default function DashboardPage() {
                                                             onChange={(e) => handleUpdateInvoiceItem(item.id, 'price', e.target.value)}
                                                         />
                                                     </td>
-                                                    <td className="text-right" style={{ paddingRight: '12px', textAlign: 'right' }}>
+                                                    <td className="text-right pr-3">
                                                         {Number(item.total).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                                     </td>
-                                                    <td style={{ textAlign: 'center' }}>
+                                                    <td className="text-center">
                                                         <button
                                                             className="icon-btn delete"
                                                             onClick={() => handleRemoveInvoiceItem(item.id)}
