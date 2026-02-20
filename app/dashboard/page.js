@@ -987,8 +987,8 @@ export default function DashboardPage() {
                         </div>
 
 
-                        <div className="invoice-footer">
-                            <div className="footer-left">
+                        <div className="invoice-footer d-flex mt-4">
+                            <div className="footer-left flex-1 pr-3">
                                 <div className="payment-terms-box">
                                     <div className="d-flex align-center mb-2">
                                         <span className="font-bold mr-2">ชำระโดย<br />PAID BY</span>
@@ -1091,36 +1091,33 @@ export default function DashboardPage() {
                                     })()} )
                                 </div>
                             </div>
-                            <div className="d-flex mt-4">
-                                <div className="flex-1 pr-3">
-                                    <div className="totals-section">
-                                        <div className="totals-row">
-                                            <span>รวมเงิน</span>
-                                            <span>{totals.subtotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
-                                        </div>
-                                        <div className="totals-row">
-                                            <span>ส่วนลด</span>
-                                            <span>0.00</span>
-                                        </div>
-                                        <div className="totals-row">
-                                            <span>หัก ณ ที่จ่าย</span>
-                                            <span>0.00</span>
-                                        </div>
-                                        <div className="d-flex justify-between mb-2">
-                                            <span>มูลค่าสินค้าหลังหักส่วนลด</span>
-                                            <span>{totals.subtotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
-                                        </div>
-                                        <div className="totals-row">
-                                            <span>ภาษีมูลค่าเพิ่ม 7%</span>
-                                            <span>{totals.vat.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
-                                        </div>
-                                        <div className="d-flex justify-between totals-divider-custom">
-                                            <span>จํานวนเงินทั้งสิ้น</span>
-                                            <span>{totals.grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
-                                        </div>
+
+                            <div className="w-40 pl-3">
+                                <div className="totals-section">
+                                    <div className="totals-row">
+                                        <span>รวมเงิน</span>
+                                        <span>{totals.subtotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
                                     </div>
-                                </div>
-                                <div className="flex-1 pl-3">
+                                    <div className="totals-row">
+                                        <span>ส่วนลด</span>
+                                        <span>0.00</span>
+                                    </div>
+                                    <div className="totals-row">
+                                        <span>หัก ณ ที่จ่าย</span>
+                                        <span>0.00</span>
+                                    </div>
+                                    <div className="d-flex justify-between mb-2">
+                                        <span>มูลค่าสินค้าหลังหักส่วนลด</span>
+                                        <span>{totals.subtotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                                    </div>
+                                    <div className="totals-row">
+                                        <span>ภาษีมูลค่าเพิ่ม 7%</span>
+                                        <span>{totals.vat.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                                    </div>
+                                    <div className="d-flex justify-between totals-divider-custom">
+                                        <span>จํานวนเงินทั้งสิ้น</span>
+                                        <span>{totals.grandTotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
